@@ -1,6 +1,6 @@
 # workbuddy-zh-thinking
 
-**Keywords / 搜索词**：WorkBuddy 中文思考 · WorkBuddy thinking Chinese · CodeBuddy 中文思考 · CodeBuddy skill · WorkBuddy plugin · 强制简体中文思维链 · force thinking in Chinese · chain-of-thought Chinese · system prompt skill injection · DeepSeek 中文思考 · AI Agent 中文推理 · Simplified Chinese CoT
+**Keywords / 搜索词**：WorkBuddy 中文思考 · WorkBuddy thinking Chinese · WorkBuddy plugin · WorkBuddy skill · 强制简体中文思维链 · force thinking in Chinese · chain-of-thought Chinese · system prompt skill injection · DeepSeek 中文思考 · AI Agent 中文推理 · Simplified Chinese CoT
 
 让 **WorkBuddy** 里所有模型的**内部思考过程**（思维链、逐步规划、工具调用前后的推理、自我审查）强制使用**简体中文**。
 
@@ -9,11 +9,13 @@
 
 * * *
 
-## CodeBuddy 能用吗？
+## CodeBuddy 用户
 
-**能，同一个内核家族。** 实机证据：CodeBuddy CN 的 agent 诊断日志里，CLI 实体指向的就是 CodeBuddy Code 内核（WorkBuddy 正是它的定制发行版，连内部文件名都叫 `codebuddy-lite-wb.mjs`）；`~/.codebuddy` 的插件市场、`SKILL.md` 结构与 WorkBuddy 完全一致。
+CodeBuddy 同属 CodeBuddy Code 内核家族（WorkBuddy 即其定制发行版），本方案的 desc 层在 CodeBuddy 上**已实测生效**（第三方 DeepSeek API，思考英文→中文；官方 GLM 实测无效）。CodeBuddy 的安装、文档与实测记录全部在姊妹仓库：
 
-在 CodeBuddy 上使用：把 `SKILL.md` + `manage.mjs` 放进 `~/.codebuddy/skills/zh-thinking/` 即可，description 层（真正起作用的那层）照常生效。`manage.mjs --app codebuddy on` 可写 CodeBuddy 的 `MEMORY.md` 保险层——但该层的注入路径在 CodeBuddy 上尚未真机验证，desc 层不受影响。
+**→ [yingjian666/codebuddy-zh-thinking](https://github.com/yingjian666/codebuddy-zh-thinking)**
+
+两个仓库完全独立：各自的技能目录（`~/.workbuddy/skills/` 与 `~/.codebuddy/skills/`）、各自的记忆文件、各自的安装卸载脚本，互不依赖，可单独安装任意一个。
 
 * * *
 
@@ -32,6 +34,8 @@ node install.mjs
 ```bash
 node install.mjs --uninstall
 ```
+
+> **CodeBuddy 用户请移步姊妹仓库**：[codebuddy-zh-thinking](https://github.com/yingjian666/codebuddy-zh-thinking)（同一思路的 CodeBuddy 版，独立安装、独立维护）。
 
 * * *
 
@@ -64,7 +68,7 @@ WorkBuddy 每轮请求都会把**技能清单**拼进系统提示，而每个技
 
 每轮请求刷一行，规则确实进了上下文。**但思考仍然是英文的。** 一条「用户指令」压不住模型的默认习惯。
 
-换成 `description` 之后立刻生效，而且**换任何模型都一样生效**——因为它在系统提示里，与模型无关。这个对照实验是整件事的关键证据。
+换成 `description` 之后立刻生效——它在系统提示里，权重远高于用户指令层。这个对照实验是整件事的关键证据。
 
 * * *
 
@@ -127,7 +131,7 @@ Windows 下若 `$HOME` 不展开，用绝对路径：
 ## 边界与代价（请先读这段）
 
 - **这是强引导，不是物理强制。** WorkBuddy 不给改系统提示正题，本项目只能做到"在系统提示里加一条约束"，做不到"重写整个提示词"。
-- **不同模型服从度不同。** DeepSeek 系通常最稳；其它模型偶有零散英文片段，尤其是长链路推理、密集英文工具输出之后。属模型训练偏好，不是本技能失效。
+- **不同模型服从度不同。** DeepSeek 系实测最稳（英文 → 中文全量生效）；GLM 在姊妹仓库的实测中**不生效**（官方 GLM 模型，思考保持英文），属模型训练偏好，提示层压不住。选对模型是本方案的前提。
 - **规则只管语言。** 代码、命令、路径、API 名、报错堆栈必须保留原文——翻译了会破坏可执行性，`SKILL.md` 里已明确写死这条。
 - **依赖 skill 处于启用状态。** 在界面上禁用该 skill，约束立刻消失。改名、删目录同理。
 - **description 可能被压缩。** 技能数量激增时，应用可能截断描述。核心句必须留在**最前面**，这也是 `SKILL.md` 里那条规则写成现在这个顺序的原因。
@@ -147,7 +151,7 @@ Windows 下若 `$HOME` 不展开，用绝对路径：
 
 | 方案 | 强度 | 代价 |
 |---|---|---|
-| **本项目**（description 注入） | 中高，系统提示层 | 需重启；依赖 skill 启用 |
+| **本项目**（description 注入） | 中高，系统提示层 | 需重启；依赖 skill 启用；**模型需服从提示**（DeepSeek 系实测通过，GLM 实测无效） |
 | workspace `AGENTS.md` | 中，项目上下文层，仅首轮 | 只对单项目生效 |
 | 插件 + `SessionStart` hook | 未知 | WorkBuddy 插件格式复杂，hook 输出能否进上下文未验证 |
 | 直接改 `app.asar` 系统提示 | 最高 | 升级即失效，动宿主程序，**不推荐** |

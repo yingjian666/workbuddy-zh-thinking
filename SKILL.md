@@ -34,14 +34,7 @@ node manage.mjs off      # 关闭（只摘标记块）
 node manage.mjs path     # 打印被管理的文件路径
 ```
 
-同时支持 WorkBuddy 与 CodeBuddy（同内核家族），`--app` 可指定，缺省自动探测：
-
-```bash
-node manage.mjs --app workbuddy on    # ~/.workbuddy/user-<id>-personal/MEMORY.md
-node manage.mjs --app codebuddy on    # ~/.codebuddy/MEMORY.md（该层路径未在 CodeBuddy 真机验证）
-```
-
-安装后的路径：`node "$HOME/.workbuddy/skills/zh-thinking/manage.mjs" <cmd>`（CodeBuddy 为 `~/.codebuddy/skills/...`）
+安装后的路径：`node "$HOME/.workbuddy/skills/zh-thinking/manage.mjs" <cmd>`
 Windows 路径不展开时用绝对路径：`node "C:/Users/<用户名>/.workbuddy/skills/zh-thinking/manage.mjs" on`
 
 脚本幂等：`on` 按 `<!-- zh-thinking:begin -->` / `<!-- zh-thinking:end -->` 定位，已存在则原样替换不堆叠；`off` 只删标记块，其他记忆一字不动。

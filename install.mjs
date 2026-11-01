@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 /**
- * zh-thinking 安装脚本
+ * zh-thinking (WorkBuddy 版) 安装脚本
  *
  *   node install.mjs              安装到 ~/.workbuddy/skills/zh-thinking/
  *   node install.mjs --uninstall  卸载（同时摘除 MEMORY.md 规则块）
+ *
+ * 本脚本只管 WorkBuddy。CodeBuddy 版请用 codebuddy-zh-thinking 仓库：
+ *   https://github.com/yingjian666/codebuddy-zh-thinking
  *
  * 零外部依赖，仅使用 Node 内置模块。
  */

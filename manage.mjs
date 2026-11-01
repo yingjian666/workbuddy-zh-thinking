@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * zh-thinking — 管理用户级 MEMORY.md 中的「中文思考」规则区块
- *
- * 同时支持 WorkBuddy（~/.workbuddy）与 CodeBuddy（~/.codebuddy）。
+ * zh-thinking (WorkBuddy 版) — 管理用户级 MEMORY.md 中的「中文思考」规则区块
  *
  * 用法：
- *   node manage.mjs on                    开启（写入/更新规则区块，自动探测应用）
- *   node manage.mjs off                   关闭（移除规则区块）
- *   node manage.mjs status                查看当前状态
- *   node manage.mjs path                  打印被管理的 MEMORY.md 路径
- *   node manage.mjs --app codebuddy on    指定应用（workbuddy | codebuddy）
+ *   node manage.mjs on       开启（写入/更新规则区块）
+ *   node manage.mjs off      关闭（移除规则区块）
+ *   node manage.mjs status   查看当前状态
+ *   node manage.mjs path     打印被管理的 MEMORY.md 路径
+ *
+ * 本脚本只管 WorkBuddy。CodeBuddy 版请用 codebuddy-zh-thinking 仓库：
+ *   https://github.com/yingjian666/codebuddy-zh-thinking
  *
  * 零外部依赖，仅使用 Node 内置模块。
  */
@@ -35,26 +35,11 @@ const RULE = `${BEGIN}
 ${END}`;
 
 /**
- * 定位某个应用的用户级 MEMORY.md。
- * WorkBuddy 布局：~/.workbuddy/user-<id>-personal/MEMORY.md（id 因机器而异，按前后缀探测）。
- * CodeBuddy 布局：~/.codebuddy/ 下暂未观测到 user-* 目录，退回 ~/.codebuddy/MEMORY.md；
- *                该路径尚未在真实内核上验证（CodeBuddy 真正起作用的是 desc 层）。
+ * 定位 WorkBuddy 的用户级 MEMORY.md。
+ * 布局：~/.workbuddy/user-<id>-personal/MEMORY.md（id 因机器而异，按前后缀探测）。
  */
-const APPS = {
-  workbuddy: '.workbuddy',
-  codebuddy: '.codebuddy',
-};
-
-function detectApp() {
-  const home = os.homedir();
-  for (const dir of Object.values(APPS)) {
-    if (fs.existsSync(path.join(home, dir))) return dir;
-  }
-  return '.workbuddy';
-}
-
-function findMemoryPath(baseDir) {
-  const base = baseDir;
+function findMemoryPath() {
+  const base = path.join(os.homedir(), '.workbuddy');
   let dir = base;
   try {
     const cand = fs
@@ -95,20 +80,8 @@ function insertBlock(text, block) {
 }
 
 function main() {
-  const argv = process.argv.slice(2);
-  let appDirName = detectApp();
-  const appIdx = argv.indexOf('--app');
-  if (appIdx !== -1 && argv[appIdx + 1]) {
-    const name = argv[appIdx + 1].toLowerCase();
-    if (!APPS[name]) {
-      console.error(`未知应用：${name}\n可选：${Object.keys(APPS).join(' | ')}`);
-      process.exit(1);
-    }
-    appDirName = APPS[name];
-    argv.splice(appIdx, 2);
-  }
-  const cmd = (argv[0] || 'status').toLowerCase();
-  const file = findMemoryPath(path.join(os.homedir(), appDirName));
+  const cmd = (process.argv[2] || 'status').toLowerCase();
+  const file = findMemoryPath();
   const raw = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
   const active = raw.includes(BEGIN) && raw.includes(END);
 
