@@ -7,6 +7,14 @@
 
 * * *
 
+## CodeBuddy 能用吗？
+
+**能，同一个内核家族。** 实机证据：CodeBuddy CN 的 agent 诊断日志里，CLI 实体指向的就是 CodeBuddy Code 内核（WorkBuddy 正是它的定制发行版，连内部文件名都叫 `codebuddy-lite-wb.mjs`）；`~/.codebuddy` 的插件市场、`SKILL.md` 结构与 WorkBuddy 完全一致。
+
+在 CodeBuddy 上使用：把 `SKILL.md` + `manage.mjs` 放进 `~/.codebuddy/skills/zh-thinking/` 即可，description 层（真正起作用的那层）照常生效。`manage.mjs --app codebuddy on` 可写 CodeBuddy 的 `MEMORY.md` 保险层——但该层的注入路径在 CodeBuddy 上尚未真机验证，desc 层不受影响。
+
+* * *
+
 ## 快速安装
 
 ```bash
