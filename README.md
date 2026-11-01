@@ -1,5 +1,7 @@
 # workbuddy-zh-thinking
 
+**Keywords / 搜索词**：WorkBuddy 中文思考 · WorkBuddy thinking Chinese · CodeBuddy 中文思考 · CodeBuddy skill · WorkBuddy plugin · 强制简体中文思维链 · force thinking in Chinese · chain-of-thought Chinese · system prompt skill injection · DeepSeek 中文思考 · AI Agent 中文推理 · Simplified Chinese CoT
+
 让 **WorkBuddy** 里所有模型的**内部思考过程**（思维链、逐步规划、工具调用前后的推理、自我审查）强制使用**简体中文**。
 
 > 这是 [dsh-zh-thinking](https://github.com/yingjian666/dsh-zh-thinking)（DeepSeek Harness 版）在 WorkBuddy 上的对应实现。
